@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "866123941299",
+    "project_id": "ltdd2-10a9b",
+    "storage_bucket": "ltdd2-10a9b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:866123941299:android:27cff79a5e231c297337c6",
+        "android_client_info": {
+          "package_name": "app.ltdd"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDeFXmfquMWdRKvH_y-rVl6xmW-zHRe7PM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
