@@ -24,7 +24,7 @@ const LivingRoomScreen = () => {
     <View style={styles.container}>
       <Text style={styles.header}>LivingRoomScreen</Text>
       <ScrollView contentContainerStyle={styles.deviceContainer}>
-        
+
         {/* Fan */}
         <View style={styles.card}>
           <Image
