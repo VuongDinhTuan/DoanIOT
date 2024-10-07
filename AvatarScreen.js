@@ -40,8 +40,8 @@ const AvatarScreen = ({ visible, onClose }) => {
   };
 
   const handleLogout = () => {
-    Alert.alert("Xác nhận", "Bạn có chắc chắn muốn đăng xuất?", [
-      { text: "Hủy", style: "cancel" },
+    Alert.alert("Bạn muốn đăng xuất à?", "Đừng đăng xuất mà , xin đấy huhu", [
+      { text: "Ô kê thôi", style: "cancel" },
       {
         text: "Đăng xuất",
         onPress: () => {
