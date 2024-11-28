@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
   modalContent: {
     flex: 1,
     backgroundColor: "#ffffff",
-    borderRadius: 20,
+    borderRadius: 0,
     padding: 20,
     width: Dimensions.get("window").width,
     height: Dimensions.get("window").height,

@@ -13,98 +13,57 @@ import { PanGestureHandler } from 'react-native-gesture-handler';
 import { useNavigation } from "@react-navigation/native";
 
 const AvatarScreen = ({ visible, onClose }) => {
-  const [slideAnimAvatar] = useState(new Animated.Value(-300));
-  const navigation = useNavigation();
+  const [slideAnimAvatar] = useState(new Animated.Value(-300)); // Khởi tạo một biến animated với giá trị ban đầu -300 để tạo hiệu ứng trượt
+  const navigation = useNavigation(); // Sử dụng hook useNavigation để điều hướng giữa các màn hình trong ứng dụng
 
   const openAvatarModal = () => {
-    Animated.timing(slideAnimAvatar, {
-      toValue: 0,
-      duration: 300,
-      useNativeDriver: false,
-    }).start();
+    Animated.timing(slideAnimAvatar, { // Bắt đầu hoạt ảnh trượt vào
+      toValue: 0, // Trượt đến vị trí 0 (vị trí hiện tại trên màn hình)
+      duration: 300, // Thời gian của hoạt ảnh (300 ms)
+      useNativeDriver: false, // Không sử dụng native driver cho hoạt ảnh
+    }).start(); // Bắt đầu hoạt ảnh
   };
 
   const closeAvatarModal = () => {
-    Animated.timing(slideAnimAvatar, {
-      toValue: -300,
-      duration: 300,
-      useNativeDriver: false,
-    }).start(() => onClose());
+    Animated.timing(slideAnimAvatar, { // Bắt đầu hoạt ảnh trượt ra
+      toValue: -300, // Trượt đến vị trí -300 (ra khỏi màn hình)
+      duration: 300, // Thời gian của hoạt ảnh (300 ms)
+      useNativeDriver: false, // Không sử dụng native driver
+    }).start(() => onClose()); // Bắt đầu hoạt ảnh và sau khi hoàn tất sẽ gọi hàm onClose
   };
 
   const handleGesture = (event) => {
-    const { translationX } = event.nativeEvent;
-    if (translationX < 100) {
-      closeAvatarModal();
+    const { translationX } = event.nativeEvent; // Lấy giá trị kéo ngang từ event
+    if (translationX < 100) { // Nếu kéo sang trái quá 100px
+      closeAvatarModal(); // Đóng modal
     }
   };
 
   const handleLogout = () => {
-    Alert.alert("Bạn muốn đăng xuất à?", "Đừng đăng xuất mà , xin đấy huhu", [
-      { text: "Ô kê thôi", style: "cancel" },
+    Alert.alert("Bạn muốn đăng xuất à?", "Đừng đăng xuất mà , xin đấy huhu", [ // Hiển thị thông báo xác nhận đăng xuất
+      { text: "Ô kê thôi", style: "cancel" }, // Lựa chọn huỷ
       {
-        text: "Đăng xuất",
+        text: "Đăng xuất", // Lựa chọn đăng xuất
         onPress: () => {
-          closeAvatarModal();
-          navigation.navigate("Login");
+          closeAvatarModal(); // Đóng modal
+          navigation.navigate("Login"); // Điều hướng đến màn hình Login
         },
       },
     ]);
   };
 
   const handleSettings = () => {
-    closeAvatarModal();
-    navigation.navigate("Settings");
+    closeAvatarModal(); // Đóng modal
+    navigation.navigate("Settings"); // Điều hướng đến màn hình Settings
   };
 
   useEffect(() => {
-    if (visible) {
-      openAvatarModal();
+    if (visible) { // Kiểm tra nếu visible là true
+      openAvatarModal(); // Mở modal nếu visible là true
     }
-  }, [visible]);
-
-  return (
-    <Modal transparent={true} visible={visible} animationType="none">
-      <TouchableOpacity style={styles.overlay} onPress={closeAvatarModal}></TouchableOpacity>
-      <PanGestureHandler onGestureEvent={handleGesture}>
-        <Animated.View style={[styles.avatarModalContent, { right: slideAnimAvatar }]}>
-          <TouchableOpacity onPress={closeAvatarModal} style={styles.backButton}>
-            <Image source={require("./assets/angle-left.png")} style={styles.backButtonIcon} />
-          </TouchableOpacity>
-          <View style={styles.avatarInfo}>
-            <Image source={require("./assets/avatar.png")} style={styles.avatarLarge} />
-            <Text style={styles.userName}>Tuấn Kẹo Béo</Text>
-            <Text style={styles.userHandle}>@TuấnKẹoBéo4029</Text>
-            <TouchableOpacity style={styles.editProfileButton}>
-              <Text style={styles.editProfileButtonText}>Chỉnh sửa hồ sơ</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.menuContainer}>
-            <TouchableOpacity style={styles.menuItem}>
-              <Image source={require("./assets/bell.png")} style={styles.menuIcon} />
-              <View style={styles.menuTextContainer}>
-                <Text style={styles.menuText}>Quản lý Thông báo</Text>
-                <Text style={styles.tokenText}>0 thông báo</Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.menuItem}>
-              <Image source={require("./assets/search-alt.png")} style={styles.menuIcon} />
-              <Text style={styles.menuText}>Quản lý thư mục</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.menuItem} onPress={handleSettings}>
-              <Image source={require("./assets/settings.png")} style={styles.menuIcon} />
-              <Text style={styles.menuText}>Cài đặt</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.menuItem} onPress={handleLogout}>
-              <Image source={require("./assets/exit.png")} style={styles.menuIcon} />
-              <Text style={[styles.menuText, styles.logoutText]}>Đăng xuất</Text>
-            </TouchableOpacity>
-          </View>
-        </Animated.View>
-      </PanGestureHandler>
-    </Modal>
-  );
+  }, [visible]); // useEffect sẽ chạy mỗi khi visible thay đổi
 };
+
 
 const styles = StyleSheet.create({
   avatarModalContent: {
@@ -116,8 +75,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     padding: 20,
     justifyContent: "flex-start",
-    borderTopLeftRadius: 20,
-    borderBottomLeftRadius: 20,
+    borderTopLeftRadius: 0,
+    borderBottomLeftRadius: 0,
     elevation: 5,
   },
   avatarInfo: {

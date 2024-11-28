@@ -15,11 +15,11 @@ import AvatarScreen from "./AvatarScreen";
 
 
 
-const HomeScreen = ({ navigation }) => {
-  const [modalVisible, setModalVisible] = useState(false);
+const HomeScreen = ({ navigation }) => { //để điều hướng giữa các màn hình trong ứng dụng React Native. Prop này cho phép bạn điều hướng qua lại giữa các màn hình.
+  const [modalVisible, setModalVisible] = useState(false); //xác định trạng thái hiển thị
   const [avatarModalVisible, setAvatarModalVisible] = useState(false);
-  const [roomModalVisible, setRoomModalVisible] = useState(false);
-  const [slideAnim] = useState(new Animated.Value(-300));
+  const [roomModalVisible, setRoomModalVisible] = useState(false);//tên của biến state,Đây là một hàm (function),useState là một hook của React, được sử dụng để tạo ra một state trong một function component.
+  const [slideAnim] = useState(new Animated.Value(-300));//vị trí khởi đầu của một animation trên trục Y hoặc X là -300 (ngoài màn hình)
   const [slideAnimAvatar] = useState(new Animated.Value(-300));
 
   const [rooms, setRooms] = useState([
@@ -27,7 +27,7 @@ const HomeScreen = ({ navigation }) => {
     { id: 2, name: "Bedroom", devices: 6, image: require("./assets/bedroom.png") },
     { id: 3, name: "Study Room", devices: 3, image: require("./assets/studyroom.png") },
     { id: 4, name: "Kitchen", devices: 8, image: require("./assets/kitchenroom.png") },
-  ]);
+  ]);//setRooms: Đây là hàm được cung cấp bởi useState, cho phép bạn thay đổi giá trị của biến
 
   const [newRoomName, setNewRoomName] = useState("");
   const [newDeviceCount, setNewDeviceCount] = useState("");
@@ -36,10 +36,10 @@ const HomeScreen = ({ navigation }) => {
   const openModal = () => {
     setModalVisible(true);
     Animated.timing(slideAnim, {
-      toValue: 0,
-      duration: 300,
-      useNativeDriver: false,
-    }).start();
+      toValue: 0,//Xác định giá trị kết thúc của animation
+      duration: 300,//Xác định thời gian của hiệu ứng (300ms).
+      useNativeDriver: false,//sử dụng Native Driver để tăng hiệu suất không.
+    }).start();//Sau khi thiết lập animation với timing, hàm .start() được gọi để bắt đầu chạy hiệu ứng.
   };
 
   const closeModal = () => {
@@ -47,42 +47,42 @@ const HomeScreen = ({ navigation }) => {
       toValue: -300,
       duration: 300,
       useNativeDriver: false,
-    }).start(() => setModalVisible(false));
+    }).start(() => setModalVisible(false));//Sau khi animation kết thúc, hàm start sẽ nhận một callback, và callback này sẽ đặt modalVisible về false để ẩn modal sau khi animation trượt ra hoàn thành. Điều này đảm bảo rằng modal chỉ ẩn khi hiệu ứng kết thúc hoàn toàn.
   };
 
   const openRoomModal = (roomId = null) => {
     setSelectedRoomId(roomId);
     if (roomId) {
-      const room = rooms.find((r) => r.id === roomId);
+      const room = rooms.find((r) => r.id === roomId);//Tìm phòng có id trùng với roomId trong mảng rooms. 
       setNewRoomName(room.name);
-      setNewDeviceCount(room.devices.toString());
+      setNewDeviceCount(room.devices.toString());// Cập nhật trạng thái newDeviceCount với số lượng thiết bị của phòng, được chuyển thành chuỗi để có thể hiển thị trong một input field
     } else {
-      setNewRoomName("");
+      setNewRoomName(""); //xóa tên phòng cũ và đặt tên mới thành chuỗi rỗng,
       setNewDeviceCount("");
     }
     setRoomModalVisible(true);
   };
 
   const closeRoomModal = () => {
-    setRoomModalVisible(false);
-    setSelectedRoomId(null);
+    setRoomModalVisible(false);//Đặt trạng thái roomModalVisible về false để ẩn modal liên quan đến phòng.
+    setSelectedRoomId(null);//Đặt selectedRoomId về null, nghĩa là không có phòng nào được chọn nữa.
     setNewRoomName("");
-    setNewDeviceCount("");
+    setNewDeviceCount("");//Xóa nội dung của newRoomName và newDeviceCount
   };
 
-  const handleSaveRoom = () => {
-    const deviceCount = parseInt(newDeviceCount, 10);
-    if (selectedRoomId) {
-      setRooms((prevRooms) =>
-        prevRooms.map((room) =>
-          room.id === selectedRoomId
+  const handleSaveRoom = () => { //Hàm này xử lý việc lưu hoặc cập nhật thông tin của một phòng (room).
+    const deviceCount = parseInt(newDeviceCount, 10); //Chuyển đổi chuỗi newDeviceCount thành một số nguyên, vì số lượng thiết bị cần là một số chứ không phải chuỗi.
+    if (selectedRoomId) { // Kiểm tra nếu có một roomId được chọn (tức là đang chỉnh sửa phòng hiện có).
+      setRooms((prevRooms) => //Hàm này cập nhật trạng thái của rooms (mảng các phòng). Nó sử dụng hàm map để duyệt qua từng phòng trong mảng:
+        prevRooms.map((room) => 
+          room.id === selectedRoomId //Nếu room.id khớp với selectedRoomId, phòng đó sẽ được cập nhật với tên mới (newRoomName) và số lượng thiết bị mới (deviceCount).
             ? { ...room, name: newRoomName, devices: deviceCount }
             : room
         )
       );
     } else {
-      const newRoom = {
-        id: rooms.length + 1,
+      const newRoom = { //Nếu selectedRoomId không tồn tại (tức là người dùng đang thêm một phòng mới).
+        id: rooms.length + 1,// số phòng hiện có +1
         name: newRoomName,
         devices: deviceCount,
         image: require("./assets/on.png"), // Hình ảnh mặc định cho phòng mới
@@ -93,8 +93,8 @@ const HomeScreen = ({ navigation }) => {
   };
 
   const handleDeleteRoom = () => {
-    if (selectedRoomId) {
-      Alert.alert("Xác nhận", "Bạn có chắc chắn muốn xóa phòng này?", [
+    if (selectedRoomId) { //Kiểm tra xem có phòng nào đang được chọn không.
+      Alert.alert("Xác nhận", "Bạn có chắc chắn muốn xóa phòng này?", [ //Hiển thị một thông báo xác nhận
         { text: "Hủy", style: "cancel" },
         {
           text: "Xóa",
@@ -110,7 +110,7 @@ const HomeScreen = ({ navigation }) => {
   };
 
   const handleGesture = (event) => {
-    const { translationX } = event.nativeEvent;
+    const { translationX } = event.nativeEvent;  //Chứa thông tin chi tiết về cử chỉ của người dùng.
     // Nếu vuốt sang trái
     if (translationX < 100) {
       closeAvatarModal();

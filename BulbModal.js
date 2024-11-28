@@ -6,7 +6,7 @@ import { GestureHandlerRootView, PanGestureHandler } from 'react-native-gesture-
 
 const BulbModal = ({ visible, onClose }) => {
   const [bulbOn, setBulbOn] = useState(true);
-  const [brightness, setBrightness] = useState(50); // Brightness from 0 to 100
+  const [brightness, setBrightness] = useState(50); // Độ sáng từ 0 đến 100
 
   const handlePanGesture = ({ nativeEvent }) => {
     if (nativeEvent.translationX > 100) {
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
   modalContent: {
     flex: 1,
     backgroundColor: "#ffffff",
-    borderRadius: 20,
+    borderRadius: 0,
     padding: 20,
     width: Dimensions.get("window").width,
     height: Dimensions.get("window").height,

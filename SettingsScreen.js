@@ -2,35 +2,36 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, TextInput, Switch, ScrollView, Modal } from 'react-native';
 
 const SettingsScreen = ({ navigation }) => {
-  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
-  const [darkModeEnabled, setDarkModeEnabled] = useState(false);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(true); // Trạng thái thông báo, mặc định là bật
+  const [darkModeEnabled, setDarkModeEnabled] = useState(false); // Trạng thái chế độ tối, mặc định là tắt
 
-  const [editProfileModalVisible, setEditProfileModalVisible] = useState(false);
-  const [changePasswordModalVisible, setChangePasswordModalVisible] = useState(false);
+  const [editProfileModalVisible, setEditProfileModalVisible] = useState(false); // Trạng thái hiển thị modal chỉnh sửa hồ sơ, mặc định là ẩn
+  const [changePasswordModalVisible, setChangePasswordModalVisible] = useState(false); // Trạng thái hiển thị modal thay đổi mật khẩu, mặc định là ẩn
 
-  const [profileName, setProfileName] = useState("John Doe");
-  const [email, setEmail] = useState("john.doe@example.com");
-  const [oldPassword, setOldPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
+  const [profileName, setProfileName] = useState("John Doe"); // Tên hồ sơ người dùng, mặc định là "John Doe"
+  const [email, setEmail] = useState("john.doe@example.com"); // Email của người dùng, mặc định là "john.doe@example.com"
+  const [oldPassword, setOldPassword] = useState(""); // Mật khẩu cũ, khởi tạo là chuỗi rỗng
+  const [newPassword, setNewPassword] = useState(""); // Mật khẩu mới, khởi tạo là chuỗi rỗng
 
-  const toggleNotifications = () => setNotificationsEnabled(previousState => !previousState);
-  const toggleDarkMode = () => setDarkModeEnabled(previousState => !previousState);
+  const toggleNotifications = () => setNotificationsEnabled(previousState => !previousState); // Hàm chuyển đổi trạng thái thông báo (bật/tắt)
+  const toggleDarkMode = () => setDarkModeEnabled(previousState => !previousState); // Hàm chuyển đổi trạng thái chế độ tối (bật/tắt)
 
   const openEditProfileModal = () => {
-    setEditProfileModalVisible(true);
+    setEditProfileModalVisible(true); // Mở modal chỉnh sửa hồ sơ
   };
 
   const closeEditProfileModal = () => {
-    setEditProfileModalVisible(false);
+    setEditProfileModalVisible(false); // Đóng modal chỉnh sửa hồ sơ
   };
 
   const openChangePasswordModal = () => {
-    setChangePasswordModalVisible(true);
+    setChangePasswordModalVisible(true); // Mở modal thay đổi mật khẩu
   };
 
   const closeChangePasswordModal = () => {
-    setChangePasswordModalVisible(false);
+    setChangePasswordModalVisible(false); // Đóng modal thay đổi mật khẩu
   };
+
 
   return (
     <View style={styles.settingsContainer}>
