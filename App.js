@@ -14,6 +14,7 @@ import SettingsScreen from './SettingsScreen'; // Đường dẫn tới Settings
 
 
 
+
 const Stack = createStackNavigator();
 
 const App = () => {

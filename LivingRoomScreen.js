@@ -6,6 +6,28 @@ import CeilingLightModal from "./CeilingLightModal"; // Import Ceiling Light Mod
 import BulbModal from "./BulbModal"; // Import Bulb Modal
 import PurifierModal from "./PurifierModal"; // Import Purifier Modal
 import ClimateModal from "./ClimateModal"; // Import Climate Modal
+import mqtt from 'mqtt';
+
+
+const client = mqtt.connect('wss://f72254649f65498686bdf704456645b8.s1.eu.hivemq.cloud:8884/mqtt', {
+  username: 'truong0907',
+  password: 'Truong123',
+});
+
+client.on('connect', () => {
+  console.log('Connected to MQTT broker');
+});
+
+client.on('error', (err) => {
+  console.log('Failed to connect to MQTT broker:', err);
+});
+
+// Hàm để publish message tới MQTT
+const publishMessage = (topic, message) => {
+  if (client.connected) {
+    client.publish(topic, message);
+  }
+};
 
 const LivingRoomScreen = () => {
   // Trạng thái của các thiết bị và modal
@@ -30,27 +52,29 @@ const LivingRoomScreen = () => {
 
   // Hàm bật/tắt trạng thái của thiết bị
   const toggleDevice = (device) => {
-    setDevices((prevDevices) => ({
-      ...prevDevices,
-      [device]: !prevDevices[device],
-    }));
+    setDevices((prevDevices) => {
+      const newStatus = !prevDevices[device];
+      
+      // Publish MQTT message để điều khiển thiết bị tương ứng
+      if (device === 'bulb') {
+        publishMessage('home/led1', newStatus ? 'on' : 'off');
+      } else if (device === 'ceilingLight') {
+        publishMessage('home/led2', newStatus ? 'on' : 'off');
+      } else if (device === 'door') {
+        // Điều khiển cửa bằng MQTT
+        publishMessage('home/door', newStatus ? 'open' : 'close');
+      } else if (device === 'fan') {
+        // Điều khiển cửa bằng MQTT
+        publishMessage('home/fan', newStatus ? 'on' : 'off');
+      }
+
+      return {
+        ...prevDevices,
+        [device]: newStatus,
+      };
+    });
   };
 
-  // Hàm mở modal
-  const openModal = (device) => {
-    setModalVisible((prevState) => ({
-      ...prevState,
-      [device]: true,
-    }));
-  };
-
-  // Hàm đóng modal
-  const closeModal = (device) => {
-    setModalVisible((prevState) => ({
-      ...prevState,
-      [device]: false,
-    }));
-  };
 
   return (
     <View style={styles.container}>
@@ -78,28 +102,6 @@ const LivingRoomScreen = () => {
           </View>
         </TouchableOpacity>
 
-        {/* AC */}
-        <TouchableOpacity onPress={() => openModal("ac")}>
-          <View style={styles.card}>
-            <Image
-              source={require("./assets/ac.png")} // Thêm hình ảnh của AC
-              style={styles.icon}
-            />
-            <Text style={styles.deviceName}>AC</Text>
-            <View style={styles.status}>
-              <Text style={styles.statusText}>{devices.ac ? "On" : "Off"}</Text>
-              <TouchableOpacity
-                style={[styles.toggle, devices.ac ? styles.on : styles.off]}
-                onPress={() => toggleDevice("ac")}
-              >
-                <View
-                  style={[styles.circle, devices.ac ? styles.circleOn : styles.circleOff]}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
-        </TouchableOpacity>
-
         {/* Ceiling Light */}
         <TouchableOpacity onPress={() => openModal("ceilingLight")}>
           <View style={styles.card}>
@@ -107,7 +109,7 @@ const LivingRoomScreen = () => {
               source={require("./assets/ceilinglight.png")} // Thêm hình ảnh của Ceiling Light
               style={styles.icon}
             />
-            <Text style={styles.deviceName}>Ceiling Light</Text>
+            <Text style={styles.deviceName}>Led1</Text>
             <View style={styles.status}>
               <Text style={styles.statusText}>{devices.ceilingLight ? "On" : "Off"}</Text>
               <TouchableOpacity
@@ -129,7 +131,7 @@ const LivingRoomScreen = () => {
               source={require("./assets/on.png")} // Thêm hình ảnh của Bulb
               style={styles.icon}
             />
-            <Text style={styles.deviceName}>Bulb</Text>
+            <Text style={styles.deviceName}>Led2</Text>
             <View style={styles.status}>
               <Text style={styles.statusText}>{devices.bulb ? "On" : "Off"}</Text>
               <TouchableOpacity
@@ -144,49 +146,26 @@ const LivingRoomScreen = () => {
           </View>
         </TouchableOpacity>
 
-        {/* Purifier */}
-        <TouchableOpacity onPress={() => openModal("purifier")}>
-          <View style={styles.card}>
-            <Image
-              source={require("./assets/purifier.png")} // Thêm hình ảnh của Purifier
-              style={styles.icon}
-            />
-            <Text style={styles.deviceName}>Purifier</Text>
-            <View style={styles.status}>
-              <Text style={styles.statusText}>{devices.purifier ? "On" : "Off"}</Text>
-              <TouchableOpacity
-                style={[styles.toggle, devices.purifier ? styles.on : styles.off]}
-                onPress={() => toggleDevice("purifier")}
-              >
-                <View
-                  style={[styles.circle, devices.purifier ? styles.circleOn : styles.circleOff]}
-                />
-              </TouchableOpacity>
-            </View>
+        {/* Door Control */}
+        <TouchableOpacity onPress={() => openModal("bulb")}>
+        <View style={styles.card}>
+          <Image
+            source={require('./assets/door.png')}
+            style={styles.icon}
+          />
+          <Text style={styles.deviceName}>Door</Text>
+          <View style={styles.status}>
+            <Text style={styles.statusText}>{devices.door ? "Open" : "Closed"}</Text>
+            <TouchableOpacity
+              style={[styles.toggle, devices.door ? styles.on : styles.off]}
+              onPress={() => toggleDevice("door")}
+            >
+              <View style={[styles.circle, devices.door ? styles.circleOn : styles.circleOff]} />
+            </TouchableOpacity>
           </View>
+        </View>
         </TouchableOpacity>
-
-        {/* Climate */}
-        <TouchableOpacity onPress={() => openModal("climate")}>
-          <View style={styles.card}>
-            <Image
-              source={require("./assets/climate.png")} // Thêm hình ảnh của Climate
-              style={styles.icon}
-            />
-            <Text style={styles.deviceName}>Climate</Text>
-            <View style={styles.status}>
-              <Text style={styles.statusText}>{devices.climate ? "On" : "Off"}</Text>
-              <TouchableOpacity
-                style={[styles.toggle, devices.climate ? styles.on : styles.off]}
-                onPress={() => toggleDevice("climate")}
-              >
-                <View
-                  style={[styles.circle, devices.climate ? styles.circleOn : styles.circleOff]}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
-        </TouchableOpacity>
+    
       </ScrollView>
 
       {/* Fan Modal */}
